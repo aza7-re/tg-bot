@@ -18,8 +18,6 @@ DB_PASSWORD = os.environ['DB_PASSWORD']
 DB_HOST = os.environ['DB_HOST']
 DB_PORT = os.environ['DB_PORT']
 DB_DATABASE = os.environ['DB_DATABASE']
-DB_REPL_USER = os.environ['DB_REPL_USER']
-DB_REPL_PASSWORD = os.environ['DB_REPL_PASSWORD']
 DB_REPL_HOST = os.environ['DB_REPL_HOST']
 DB_REPL_PORT = os.environ['DB_REPL_PORT']
 
