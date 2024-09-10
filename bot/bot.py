@@ -123,7 +123,7 @@ def getServicesCommand(update: Update, context):
     update.message.reply_text(result.stdout.decode())
 
 def getReplLogsCommand(update: Update, context):
-    result = subprocess.run('tail /var/log/postgresql/*.log', shell=True, capture_output=True)
+    result = subprocess.run(f'ssh -i ~/.ssh/k {RM_USER}@{RM_HOST} -p {RM_PORT} tail /var/log/postgresql/*.log', shell=True, capture_output=True)
     update.message.reply_text(result.stdout.decode())
 
 def getEMailsCommand(update: Update, context):
