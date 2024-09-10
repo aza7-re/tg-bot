@@ -1,0 +1,13 @@
+---
+ - name: stop postgres
+   service:
+     name: postgresql
+     state: stopped
+
+ - name: start repl
+   shell: |
+      rm -rf /var/lib/postgresql/14/main/ && pg_basebackup --pgdata=/var/lib/postgresql/14/main -R -w -U {{ DB_REPL_USER }} --host={{ DB_HOST }} --port={{ DB_PORT }}
+      echo "listen_addresses = '*'" >> /etc/postgresql/14/main/postgresql.conf
+      echo 'host {{ DB_DATABASE }} {{ DB_USER }} 0.0.0.0/0 scram-sha-256' >> /etc/postgresql/14/main/pg_hba.conf
+      chown -R postgres:postgres /var/lib/postgresql/14/main/ && chmod 0700 /var/lib/postgresql/14/main/
+   notify: start postgres

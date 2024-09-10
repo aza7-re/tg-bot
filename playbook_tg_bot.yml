@@ -1,0 +1,21 @@
+---
+ - hosts: pgmaster,pgslave
+   become: true
+   roles:
+     - postgres
+
+ - hosts: pgmaster
+   become: true
+   roles:
+     - postgres-master
+
+ - hosts: pgslave
+   become: true
+   roles:
+     - postgres-slave
+
+ - hosts: bot
+   become: true
+   roles:
+     - bot
+

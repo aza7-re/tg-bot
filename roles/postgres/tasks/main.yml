@@ -1,0 +1,9 @@
+---
+ - name: update apt
+   apt:
+     update_cache: yes
+
+ - name: install postgresl
+   apt:
+     name: postgresql-14
+     state: latest

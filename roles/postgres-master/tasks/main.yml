@@ -1,0 +1,23 @@
+---
+ - name: update pg-hba and configuration
+   shell: |
+      echo 'host replication {{ DB_REPL_USER }} 0.0.0.0/0 trust' >> /etc/postgresql/14/main/pg_hba.conf
+      echo 'host {{ DB_DATABASE }} {{ DB_USER }} 0.0.0.0/0 scram-sha-256' >> /etc/postgresql/14/main/pg_hba.conf
+      echo "listen_addresses = '*'" >> /etc/postgresql/14/main/postgresql.conf
+   notify: restart postgres
+
+ - name: create user for bot
+   shell: |
+      sudo -u postgres psql -c "CREATE USER {{ DB_USER }} WITH PASSWORD '{{ DB_PASSWORD }}';"
+
+ - name: create db and tables for bot
+   shell: |
+      sudo -u postgres psql -c "create database {{ DB_DATABASE }} with owner {{ DB_USER }};"
+      sudo -u postgres psql -d {{ DB_DATABASE }} -c "create table user_emails(id serial primary key, email varchar(256) not null);"
+      sudo -u postgres psql -d {{ DB_DATABASE }} -c "ALTER TABLE user_emails OWNER TO {{ DB_USER }};"
+      sudo -u postgres psql -d {{ DB_DATABASE }} -c "create table user_phones(id serial primary key, phone varchar(256) not null);"
+      sudo -u postgres psql -d {{ DB_DATABASE }} -c "ALTER TABLE user_phones OWNER TO {{ DB_USER }};"
+
+ - name: create user for repl
+   shell: |
+      sudo -u postgres psql -d {{ DB_DATABASE }} -c "CREATE USER {{ DB_REPL_USER }} REPLICATION LOGIN ENCRYPTED PASSWORD '{{ DB_REPL_PASSWORD }}';"

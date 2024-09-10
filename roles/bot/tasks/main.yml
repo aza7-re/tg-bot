@@ -1,0 +1,58 @@
+---
+ - name: update apt
+   apt:
+     update_cache: yes
+
+ - name: install python
+   apt:
+     name: python3
+     state: latest
+
+ - name: install pip
+   apt:
+     name: python3-pip
+     state: latest
+
+ - name: Creates directory
+   ansible.builtin.file:
+      path: /opt/tg_bot
+      state: directory
+
+ - name: download bot
+   ansible.builtin.get_url:
+      url: "https://raw.githubusercontent.com/aza7-re/tg-bot/docker/bot/bot.py"
+      dest: "/opt/tg_bot/bot.py"
+      mode: '0755'
+
+ - name: download bot_req
+   ansible.builtin.get_url:
+      url: "https://raw.githubusercontent.com/aza7-re/tg-bot/docker/bot/requirements.txt"
+      dest: "/opt/tg_bot/requirements.txt"
+      mode: '0755'
+
+ - name: install requirements
+   ansible.builtin.pip:
+      requirements: /opt/tg_bot/requirements.txt
+
+ - name: copy key for monitoring
+   copy:
+     src: ~/.ssh/k
+     dest: ~/.ssh/k
+     mode: '0600'
+
+ - name: run script
+   ansible.builtin.shell:
+      cmd: python3 /opt/tg_bot/bot.py &
+   environment:
+      TOKEN: "{{ TOKEN }}"
+      RM_HOST: "{{ RM_HOST }}"
+      RM_PORT: "{{ RM_PORT }}"
+      RM_USER: "{{ RM_USER }}"
+      RM_PASSWORD: "{{ RM_PASSWORD }}"
+      DB_USER: "{{ DB_USER }}"
+      DB_PASSWORD: "{{ DB_PASSWORD }}"
+      DB_HOST: "{{ DB_HOST }}"
+      DB_PORT: "{{ DB_PORT }}"
+      DB_DATABASE: "{{ DB_DATABASE }}"
+      DB_REPL_HOST: "{{ DB_REPL_HOST }}"
+      DB_REPL_PORT: "{{ DB_REPL_PORT }}"
